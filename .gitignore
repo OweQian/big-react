@@ -8,7 +8,7 @@ bin-release/
 .idea/*
 # Other files and folders
 .settings/
-
+dist/**
 # Executables
 *.swf
 *.air
