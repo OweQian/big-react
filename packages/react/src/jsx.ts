@@ -16,6 +16,7 @@ const ReactElement = function (
 	ref: Ref,
 	props: Props
 ): ReactElementType {
+	// 返回 element 对象
 	const element = {
 		$$typeof: REACT_ELEMENT_TYPE,
 		type,
@@ -28,6 +29,7 @@ const ReactElement = function (
 	return element;
 };
 
+// jsx 方法
 export const jsx = (type: ElementType, config: any, ...maybeChildren: any) => {
 	let key: Key = null;
 	const props: Props = {};
@@ -67,6 +69,7 @@ export const jsx = (type: ElementType, config: any, ...maybeChildren: any) => {
 	return ReactElement(type, key, ref, props);
 };
 
+// jsxDEV 方法
 export const jsxDEV = (type: ElementType, config: any) => {
 	let key: Key = null;
 	const props: Props = {};
