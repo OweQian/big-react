@@ -21,11 +21,16 @@ export class FiberNode {
 
 	constructor(tag: WorkTag, pendingProps: Props, key: Key) {
 		// 实例
+		// 组件类型
 		this.tag = tag;
+		// key
 		this.key = key;
+		//fiberNode 对应的元素
 		// HostComponent <div> div DOM
 		this.stateNode = null;
-		// FunctionComponent () => {}
+		// FunctionComponent 指函数本身
+		// ClassComponent 指 class
+		// HostComponent 指 DOM tagName(小写)
 		this.type = null;
 
 		// 作为树状结构
@@ -40,6 +45,9 @@ export class FiberNode {
 		this.pendingProps = pendingProps;
 		this.memoizedProps = null;
 
+		// 指向另一个缓冲区中对应的 fiberNode
+		// current.alternate === workInProgress
+		// workInProgress.alternate === current
 		this.alternate = null;
 		// 副作用
 		this.flags = NoFlags;

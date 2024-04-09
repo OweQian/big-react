@@ -1,7 +1,7 @@
 // ReactElement
 
 import { REACT_ELEMENT_TYPE } from 'shared/ReactSymbols';
-import {
+import type {
 	ElementType,
 	Key,
 	Props,

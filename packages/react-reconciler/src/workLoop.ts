@@ -2,6 +2,7 @@ import { beginWork } from './beginWork';
 import { completeWork } from './completeWork';
 import { FiberNode } from './fiber';
 
+// 全局变量 workInProgress
 let workInProgress: FiberNode | null = null;
 
 function prepareFreshStack(fiber: FiberNode) {
@@ -24,11 +25,13 @@ function renderRoot(root: FiberNode) {
 }
 
 function workLoop() {
+	// workLoop
 	while (workInProgress !== null) {
 		performUnitOfWork(workInProgress);
 	}
 }
 
+// 递
 function performUnitOfWork(fiber: FiberNode) {
 	const next = beginWork(fiber);
 	fiber.memoizedProps = fiber.pendingProps;
@@ -42,6 +45,7 @@ function performUnitOfWork(fiber: FiberNode) {
 	}
 }
 
+// 归
 function completeUnitOfWork(fiber: FiberNode) {
 	let node: FiberNode | null = fiber;
 
