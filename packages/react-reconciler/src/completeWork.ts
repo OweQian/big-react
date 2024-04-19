@@ -2,6 +2,4 @@
 
 import { FiberNode } from './fiber';
 
-export const completeWork = (fiber: FiberNode) => {
-	// 归
-};
+export const completeWork = (fiber: FiberNode) => {};

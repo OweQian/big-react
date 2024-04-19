@@ -12,3 +12,6 @@ export interface ReactElementType {
 	ref: Ref;
 	__mark: string;
 }
+
+// useState 的 dispatch 方法
+export type Action<State> = State | ((prevState: State) => State);
