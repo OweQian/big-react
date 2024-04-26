@@ -6,9 +6,9 @@ import { HostRoot } from './workTags';
 // 全局变量 workInProgress
 let workInProgress: FiberNode | null = null;
 
-// 挂载：FiberRootNode
+// 挂载：workInProgress === HostRootFiber
 function prepareFreshStack(root: FiberRootNode) {
-	// 创建 WorkInProgress Tree 中的 HostRootFiber
+	// 通过 Current Fiber Tree 中的同级 FiberNode，创建 WorkInProgress Fiber Tree 中的 FiberNode
 	workInProgress = createWorkInProgress(root.current, {});
 }
 
@@ -19,7 +19,7 @@ export function scheduleUpdateOnFiber(fiber: FiberNode) {
 	renderRoot(root);
 }
 
-// 更新可能发生于任意组件，而更新流程是从根节点，即 HostRootFiber 递归的
+// 更新可能发生于任意组件，向上找到 FiberRootNode
 function markUpdateFromFiberToRoot(fiber: FiberNode) {
 	let node = fiber;
 	let parent = fiber.return;
@@ -28,7 +28,7 @@ function markUpdateFromFiberToRoot(fiber: FiberNode) {
 		node = parent;
 		parent = node.return;
 	}
-	// 找到 FiberRootNode
+	// 返回 FiberRootNode
 	if (node.tag === HostRoot) {
 		return node.stateNode;
 	}
@@ -49,7 +49,9 @@ function renderRoot(root: FiberRootNode) {
 			workLoop();
 			break;
 		} catch (e) {
-			console.warn('workLoop发生错误', e);
+			if (__DEV__) {
+				console.warn('workLoop发生错误', e);
+			}
 			workInProgress = null;
 		}
 	} while (true);

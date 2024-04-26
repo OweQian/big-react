@@ -1,5 +1,5 @@
-import type { Key, Props, Ref } from 'shared/ReactTypes';
-import type { WorkTag } from './workTags';
+import type { Key, Props, ReactElementType, Ref } from 'shared/ReactTypes';
+import { FunctionComponent, HostComponent, type WorkTag } from './workTags';
 import { NoFlags, type Flags } from './fiberFlags';
 import { Container } from 'hostConfig';
 
@@ -68,19 +68,22 @@ export class FiberNode {
 
 /**
  * FiberRootNode
- * HostRootFiber(: 根节点
+ * HostRootFiber
  * FiberRootNode.current === HostRootFiber
  * HostRootFiber.stateNode === FiberRootNode
  *
  */
 export class FiberRootNode {
-	container: Container; // 挂载容器
-	current: FiberNode; // 指向 hostRootFiber
-	finishedWork: FiberNode | null; // 指向递归已经完成的 hostRootFiber
+	container: Container;
+	current: FiberNode;
+	finishedWork: FiberNode | null;
 	constructor(container: Container, hostRootFiber: FiberNode) {
+		// 挂载容器
 		this.container = container;
+		// 指向 HostRootFiber
 		this.current = hostRootFiber;
 		hostRootFiber.stateNode = this;
+		// 指向递归已经完成的 HostRootFiber
 		this.finishedWork = null;
 	}
 }
@@ -92,11 +95,11 @@ export const createWorkInProgress = (
 	// 生成 WorkInProgress FiberNode 时会复用 Current Fiber Tree 中的同级节点
 	let wip = current.alternate;
 	if (wip === null) {
-		// mount - 首屏渲染 - 创建 WorkInProgress Tree 中的 HostRootFiber
+		// mount - 首屏渲染
 		wip = new FiberNode(current.tag, pendingProps, current.key);
 		wip.stateNode = current.stateNode;
 
-		// alternate 链接 Current HostRootFiber 和 WorkInProgress HostRootFiber
+		// alternate 连接 Current FiberNode 和 WorkInProgress FiberNode
 		wip.alternate = current;
 		current.alternate = wip;
 	} else {
@@ -112,3 +115,19 @@ export const createWorkInProgress = (
 	wip.memoizedState = current.memoizedState;
 	return wip;
 };
+
+export function createFiberFromElement(element: ReactElementType): FiberNode {
+	const { type, key, props } = element;
+	// 默认 FunctionComponent
+	let fiberTag: WorkTag = FunctionComponent;
+
+	if (typeof type === 'string') {
+		// <div/> type: 'div'
+		fiberTag = HostComponent;
+	} else if (typeof type !== 'function' && __DEV__) {
+		console.warn('未定义的type类型', element);
+	}
+	const fiber = new FiberNode(fiberTag, props, key);
+	fiber.type = type;
+	return fiber;
+}
